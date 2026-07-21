@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Программа №2 (Сервер): Слушает входящие соединения на порту 5001
+  program2:
+    build: .
+    container_name: cpp_program2
+    command: ./build/bin/program2
+    ports:
+      - "5001:5001"
+
+  # Программа №1 (Клиент): Запускается в сетевом пространстве Программы №2
+  # Это позволяет клиенту подключаться к '127.0.0.1' и взаимодействовать с сервером.
+  program1:
+    build: .
+    container_name: cpp_program1
+    network_mode: "service:program2"
+    command: ./build/bin/program1
+    stdin_open: true
+    tty: true
+    depends_on:
+      - program2
